@@ -98,10 +98,11 @@
       height: auto;
       border-radius: 8px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: block;
     }
 
     .thumbnail-container img:hover {
-      transform: scale(1.1);
+      transform: scale(1.03);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
@@ -110,13 +111,15 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(30, 58, 138, 0.8);
+      background: rgba(30, 58, 138, 0.85);
       color: #fff;
-      padding: 10px 14px;
-      border-radius: 5px;
+      padding: 10px 18px;
+      border-radius: 6px;
       font-size: 14px;
+      font-weight: bold;
       opacity: 0;
       transition: opacity 0.3s ease;
+      pointer-events: none;
     }
 
     .thumbnail-container:hover .play-button {
@@ -148,9 +151,8 @@
       text-decoration: underline;
     }
 
-    /* Nota para el video */
     .nota-laboratorio_3 {
-      color: #8B0000; /* rojo oscuro */
+      color: #8B0000;
       font-weight: 600;
       font-size: 14px;
       margin-bottom: 6px;
@@ -160,7 +162,6 @@
       margin-right: auto;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 768px) {
       .header-content {
         flex-direction: column;
@@ -199,7 +200,7 @@
       <div class="header-text">
         <h1>Clases del Curso de CCNAv7 [ENSA]</h1>
         <h2>Redes Empresariales, Seguridad y Automatización</h2>
-        <h2>Inicio: 25 de Octubre de 2026 - Horario: Domingos | 8:00 a.m. - 12:0 m.</h2>
+        <h2>Inicio: 25 de Octubre de 2026 - Horario: Domingos | 8:00 a.m. - 12:00 m.</h2>
         <h1>Instructor Gustavo Spinetti</h1>
       </div>
       <img src="imagenes/cisco-netacad.png" alt="Logo Derecho" class="logo logo-right">
@@ -212,9 +213,8 @@
 
       <tr>
         <td>
-          </div>
-          <a href="https://drive.google.com/file/d/15hwVtvt_4hj3pCtDjLGPQre4bn1z7hoq/view?usp=drive_link" target="_blank" class="thumbnail-container">
-            <img src="https://drive.google.com/file/d/1ZbKNizJsFGI90jydOjtBOw4RWq_9m024/view?usp=drive_link" alt="Vista previa">
+          <a href="https://drive.google.com/file/d/15hwVtvt_4hj3pCtDjLGPQre4bn1z7hoq/preview" target="_blank" class="thumbnail-container">
+            <img src="https://lh3.googleusercontent.com/d/1ZbKNizJsFGI90jydOjtBOw4RWq_9m024" alt="1era Clase CCNAv7 ENSA - 25 de Octubre de 2026">
             <span class="play-button">Ver Clase</span>
           </a>
         </td>
