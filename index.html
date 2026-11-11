@@ -1,278 +1,218 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clases del Curso CCNAv7 [ENSA]</title>
-  <link rel="icon" href="imagenes/favicon_red.ico" type="image/x-icon" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clases CCNAv7 [ENSA] | Instructor Gustavo Spinetti</title>
+  <link rel="icon" type="image/x-icon" href="imagenes/favicon_red.ico">
+
   <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #1e3a8a, #60a5fa);
+    :root {
+      --primary-color: #0b3c5d;      /* Azul Cisco institucional */
+      --secondary-color: #0288d1;    /* Azul dinámico / enlaces */
+      --accent-color: #d92525;       /* Rojo de acento */
+      --bg-color: #f4f7f9;           /* Fondo gris claro limpio */
+      --card-bg: #ffffff;
+      --text-main: #0b3c5d;          /* Azul institucional */
+      --text-muted: #0b3c5d;         /* Subtítulos en azul */
+      --border-color: #e2e8f0;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --transition: all 0.25s ease-in-out;
+    }
+
+    /* MODO OSCURO */
+    body.dark-mode {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #38bdf8;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.5;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
       min-height: 100vh;
-      color: #fff;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 20px 15px;
       width: 100%;
-      background: #fff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      flex: 1;
     }
 
-    .header-content {
+    /* BARRA SUPERIOR DE ACCIONES */
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .btn-action {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 7px 14px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: var(--transition);
+    }
+
+    .btn-action:hover {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+      transform: translateY(-1px);
+    }
+
+    /* HEADER */
+    .header-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 25px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: nowrap;
-      text-align: center;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #e5e7eb;
+      gap: 20px;
+      margin-bottom: 25px;
+      border-top: 5px solid var(--primary-color);
     }
 
-    .logo {
-      width: 120px;
-      height: 120px;
+    .header-logo {
+      width: 115px;
+      height: 115px;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      margin: 10px;
+      box-shadow: var(--shadow);
+      background-color: #ffffff;
       flex-shrink: 0;
     }
 
-    .header-text {
-      flex: 1;
-      padding: 10px;
-    }
-
-    .header-text h1 {
-      margin: 0;
-      font-size: 28px;
-      color: #1e3a8a;
-    }
-
-    .header-text h2, .header-text h3 {
-      margin: 8px 0;
-      font-size: 18px;
-      color: #1e3a8a;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #f8fafc;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 16px 12px;
-      font-size: 14px;
-      border-bottom: 1px solid #e0e0e0;
+    .header-content {
       text-align: center;
+      flex: 1;
     }
 
-    th {
-      background: #1e3a8a;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .header-content h1 {
+      font-size: 1.5rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
     }
 
-    .video-block {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 500px;
-      width: 100%;
+    .header-content h2 {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 4px;
     }
 
-    .thumbnail-container {
+    .header-content .instructor {
+      font-size: 1.15rem;
+      color: var(--text-main);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* BARRA DE BÚSQUEDA REDONDEADA Y COMPACTA */
+    .search-wrapper {
+      max-width: 550px;
+      margin: 0 auto 10px auto;
       position: relative;
-      display: inline-block;
-    }
-    
-    .thumbnail-container img {
       width: 100%;
-      max-width: 500px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .thumbnail-container img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    .search-input {
+      width: 100%;
+      padding: 10px 20px 10px 42px;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      background: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      outline: none;
+      transition: var(--transition);
     }
 
-    .play-button {
+    .search-input:focus {
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.2);
+    }
+
+    .search-icon {
       position: absolute;
+      left: 15px;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(30, 58, 138, 0.85);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: bold;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
       pointer-events: none;
     }
 
-    .thumbnail-container:hover .play-button {
-      opacity: 1;
-    }
-
-    /* Enlace pegado debajo de la imagen */
-    .doc-link {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      background: #1e3a8a;
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
-      padding: 10px 12px;
-      border-radius: 0 0 8px 8px;
-      letter-spacing: 0.3px;
-      transition: background-color 0.2s ease;
-      margin-top: -4px; /* Elimina cualquier separación diminuta con la imagen */
-    }
-
-    .doc-link:hover {
-      background: #2563eb;
-      text-decoration: none;
-    }
-
-    tr:nth-child(even) {
-      background: #f1f5f9;
-    }
-
-    footer {
+    /* CONTADOR DINÁMICO */
+    .search-counter {
       text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #666;
-    }
-
-    footer a {
-      color: #1e3a8a;
-      text-decoration: none;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 25px;
       font-weight: 500;
     }
 
-    footer a:hover {
-      text-decoration: underline;
+    .no-results {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      display: none;
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
     }
 
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        align-items: center;
-      }
+    /* GRID DE CLASES */
+    .classes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
 
-      .logo {
-        width: 90px;
-        height: 90px;
-      }
+    .class-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+      position: relative;
+      content-visibility: auto;
+    }
 
-      .header-text h1 {
-        font-size: 22px;
-      }
-
-      .header-text h2, .header-text h3 {
-        font-size: 16px;
-      }
-
-      th, td {
-        font-size: 12px;
-        padding: 10px 6px;
-      }
-
-      .doc-link {
-        font-size: 13px;
-        padding: 8px 10px;
-      }
-      
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header-content">
-      <img src="imagenes/logo-circular.jpg" alt="Logo Izquierdo" class="logo logo-left">
-      <div class="header-text">
-        <h1>Clases del Curso de CCNAv7 [ENSA]</h1>
-        <h2>Redes Empresariales, Seguridad y Automatización</h2>
-        <h2>Inicio: 25 de Octubre de 2026 - Horario: Domingos | 8:00 a.m. - 12:00 m.</h2>
-        <h1>Instructor Gustavo Spinetti</h1>
-      </div>
-      <img src="imagenes/cisco-netacad.png" alt="Logo Derecho" class="logo logo-right">
-    </div>
-
-    <table>
-      <tr>
-        <th>Vista Previa</th>
-      </tr>
-
-      <tr>
-        <td>
-          <div class="video-block">
-          <a href="https://www.youtube.com/playlist?list=PLSTQXIX2RgZg" target="_blank" class="thumbnail-container">
-            <img src="https://img.youtube.com/vi/gsPjd-CyTnM/maxresdefault.jpg" alt="Vista previa">
-            <span class="play-button">Ver Clase</span>
-          </a>
-        </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <div class="video-block">
-          <a href="https://www.youtube.com/playlist?list=PLXsMWnMq7UQ8" target="_blank" class="thumbnail-container">
-            <img src="https://img.youtube.com/vi/XNGZvYB1i7Q/maxresdefault.jpg" alt="Vista previa">
-            <span class="play-button">Ver Clase</span>
-          </a>
-        </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="video-block">
-            <!-- Reproductor del video -->
-           <!-- <a href="https://drive.google.com/file/d/15hwVtvt_4hj3pCtDjLGPQre4bn1z7hoq/preview" target="_blank" class="thumbnail-container"> -->
-          <a href="https://www.youtube.com/playlist?list=PLJdVnvf5DzFw" target="_blank" class="thumbnail-container">
-            
-             <!-- <img src="https://lh3.googleusercontent.com/d/1ZbKNizJsFGI90jydOjtBOw4RWq_9m024" alt="Vista previa"> -->
-            <img src="https://img.youtube.com/vi/AKOjbsN0iUA/maxresdefault.jpg" alt="Vista previa">
-              <span class="play-button">Ver Clase</span>
-            </a>
-
-            <!-- Enlace pegado a la base de la imagen que abre el Google Doc -->
-            <!-- <a href="https://docs.google.com/document/d/14EMIyU0M_ot29GmpGL4pnsOAKBewFR1UISnFA5PzHSg/preview" target="_blank" class="doc-link">
-              📄 Contenido de la Clase -->
-
-            </a>
-          </div>
-        </td>
-      </tr>
-    </table>
-
-    <footer>
-      <p>Curso CCNAv7 impartido por el Instructor Gustavo Spinetti | Contacto:
-        <a href="mailto:gustavoaspinettim@yahoo.es">gustavoaspinettim@yahoo.es</a>
-      </p>
-    </footer>
-  </div>
-</body>
-</html>
+    .class-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0
