@@ -220,8 +220,8 @@
     /* BADGE ÚLTIMA CLASE */
     .badge-latest {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      bottom: 12px; /* <-- Ubicación en la parte inferior */
+      right: 12px;  /* <-- Ubicación en la derecha */
       background-color: #ea580c !important;  /* COLOR ANARANJADO */
       color: #ffffff !important;
       font-size: 0.75rem;
@@ -481,10 +481,11 @@
       // 1. ASIGNACIÓN AUTOMÁTICA DEL BADGE "ÚLTIMA CLASE" A LA PRIMERA TARJETA
       if (cards.length > 0) {
         const firstCard = cards[0];
+        const thumbnailBox = firstCard.querySelector('.thumbnail-container') || firstCard;
         const badge = document.createElement('span');
         badge.className = 'badge-latest';
         badge.textContent = 'Última clase';
-        firstCard.appendChild(badge);
+        thumbnailBox.appendChild(badge);
       }
 
       // 2. FUNCIÓN DE BÚSQUEDA Y CONTADOR
