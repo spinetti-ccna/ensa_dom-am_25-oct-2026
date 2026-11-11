@@ -222,4 +222,343 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      background
+      background: var(--accent-color);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(217, 37, 37, 0.5);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .thumbnail-container {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background-color: #000;
+      overflow: hidden;
+      display: block;
+    }
+
+    .thumbnail-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .class-card:hover .thumbnail-container img {
+      transform: scale(1.03);
+    }
+
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .class-card:hover .play-overlay {
+      opacity: 1;
+    }
+
+    .play-btn-circle {
+      background: rgba(11, 60, 93, 0.92);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.4rem;
+      padding-left: 4px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* BOTÓN FLOTANTE VOLVER ARRIBA */
+    .scroll-top-btn {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      z-index: 100;
+    }
+
+    .scroll-top-btn:hover {
+      background: var(--secondary-color);
+      transform: translateY(-3px);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 20px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 40px;
+    }
+
+    footer a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .header-logo {
+        width: 100px;
+        height: 100px;
+      }
+      .classes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- BARRA SUPERIOR DE ACCIONES -->
+    <div class="top-actions">
+      <a href="https://drive.google.com/drive/folders/1x-dnf0UisRxHEQQ3FNH5yb_xCxK8xJvh?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-action" title="Acceso a presentaciones, guías y Packet Tracer">
+        📁 Recursos para el Estudiante
+      </a>
+      <button id="themeToggle" class="btn-action" type="button" aria-label="Cambiar tema">
+        🌙 Modo Oscuro
+      </button>
+    </div>
+
+    <!-- ENCABEZADO -->
+    <header class="header-card">
+      <img src="imagenes/logo-circular.jpg" alt="Logo Izquierdo" class="header-logo" width="115" height="115">
+      <div class="header-content">
+        <h1>Clases del Curso de CCNAv7 [ENSA]</h1>
+        <h2>Redes Empresariales, Seguridad y Automatización</h2>
+        <h2>Inicio: 25 de Octubre de 2026 — Horario: Domingos | 8:00 a.m. - 12:00 m.</h2>
+        <div class="instructor">Instructor Gustavo Spinetti</div>
+      </div>
+      <img src="imagenes/cisco-netacad.png" alt="Logo Derecho" class="header-logo" width="115" height="115">
+    </header>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <section class="search-wrapper">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input 
+        type="search" 
+        id="courseSearch" 
+        class="search-input" 
+        placeholder="Buscar clase por tema, fecha o palabra clave..."
+        aria-label="Buscar clases por palabra clave o fecha"
+        autocomplete="off"
+      >
+    </section>
+
+    <!-- CONTADOR DINÁMICO DE RESULTADOS -->
+    <div id="searchCounter" class="search-counter">
+      Cargando clases...
+    </div>
+
+    <!-- MENSAJE DE ESTADO: SIN RESULTADOS -->
+    <div id="noResults" class="no-results" role="status" aria-live="polite">
+      No se encontraron clases que coincidan con tu búsqueda.
+    </div>
+
+    <!-- LISTADO DE CLASES EN GRID (ORDEN DESCENDENTE: MÁS RECIENTE PRIMERO) -->
+    <main class="classes-grid" id="classesGrid">
+
+      <!-- Clase 03 (08/Nov/2026) -->
+      <article
+        class="class-card" 
+        data-class="03"
+        data-title="Clase 03 ENSA"
+        data-date="08/Nov/2026 08 de Noviembre"
+        data-keywords="revision eap examen de aptitudes practicas correcciones cisco packet tracer simulacion asignaciones srwe"
+      >
+        <a href="https://www.youtube.com/playlist?list=PLSTQXIX2RgZg" target="_blank" rel="noopener noreferrer" class="thumbnail-container">
+          <img src="https://img.youtube.com/vi/gsPjd-CyTnM/maxresdefault.jpg" alt="Clase 03 ENSA - 08/Nov/2026" loading="lazy">
+          <div class="play-overlay">
+            <span class="play-btn-circle" aria-hidden="true">▶</span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Clase 02 (01/Nov/2026) -->
+      <article
+        class="class-card" 
+        data-class="02"
+        data-title="Clase 02 ENSA"
+        data-date="01/Nov/2026 01 de Noviembre 1ero"
+        data-keywords="revision eap examen de aptitudes practicas correcciones cisco packet tracer simulacion asignaciones srwe"
+      >
+        <a href="https://www.youtube.com/playlist?list=PLXsMWnMq7UQ8" target="_blank" rel="noopener noreferrer" class="thumbnail-container">
+          <img src="https://img.youtube.com/vi/XNGZvYB1i7Q/maxresdefault.jpg" alt="Clase 02 ENSA - 01/Nov/2026" loading="lazy">
+          <div class="play-overlay">
+            <span class="play-btn-circle" aria-hidden="true">▶</span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Clase 01 (25/Oct/2026) -->
+      <article
+        class="class-card" 
+        data-class="01"
+        data-title="Clase 01 ENSA"
+        data-date="25/Oct/2026 25 de Octubre"
+        data-keywords="bienvenida 3er modulo ccna ensa redes empresariales seguridad automatizacion recursos cisco packet tracer metodologia asignaciones 1 2 modulo 1 conceptos ospfv2 ospf area unica spf dijkstra neighbor database route netacad ppta itn srwe"
+      >
+        <a href="https://www.youtube.com/playlist?list=PLJdVnvf5DzFw" target="_blank" rel="noopener noreferrer" class="thumbnail-container">
+          <img src="https://img.youtube.com/vi/AKOjbsN0iUA/maxresdefault.jpg" alt="Clase 01 ENSA - 25/Oct/2026" loading="lazy">
+          <div class="play-overlay">
+            <span class="play-btn-circle" aria-hidden="true">▶</span>
+          </div>
+        </a>
+      </article>
+
+    </main>
+
+  </div>
+
+  <!-- BOTÓN FLOTANTE VOLVER ARRIBA -->
+  <button id="scrollTopBtn" class="scroll-top-btn" title="Volver arriba" aria-label="Volver arriba">
+    ↑
+  </button>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Curso CCNAv7 impartido por el Instructor Gustavo Spinetti | Contacto: 
+      <a href="mailto:gustavoaspinettim@yahoo.es">gustavoaspinettim@yahoo.es</a>
+    </p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('courseSearch');
+      const cards = Array.from(document.querySelectorAll('.class-card'));
+      const noResults = document.getElementById('noResults');
+      const searchCounter = document.getElementById('searchCounter');
+      const themeToggle = document.getElementById('themeToggle');
+      const scrollTopBtn = document.getElementById('scrollTopBtn');
+      const totalCards = cards.length;
+
+      // 1. ASIGNACIÓN AUTOMÁTICA DEL BADGE "ÚLTIMA CLASE" A LA PRIMERA TARJETA
+      if (cards.length > 0) {
+        const firstCard = cards[0];
+        const badge = document.createElement('span');
+        badge.className = 'badge-latest';
+        badge.textContent = 'Última clase';
+        firstCard.appendChild(badge);
+      }
+
+      // 2. FUNCIÓN DE BÚSQUEDA Y CONTADOR
+      const updateCounter = (count) => {
+        if (searchInput.value.trim()) {
+          searchCounter.textContent = `Mostrando ${count} de ${totalCards} clases`;
+        } else {
+          searchCounter.textContent = `Mostrando ${totalCards} de ${totalCards} clases`;
+        }
+      };
+
+      updateCounter(totalCards);
+
+      const normalizeText = (text) => {
+        return (text || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+      };
+
+      searchInput.addEventListener('input', (e) => {
+        const query = normalizeText(e.target.value.trim());
+        let matchesCount = 0;
+
+        cards.forEach((card) => {
+          const searchableContent = [
+            card.getAttribute('data-class'),
+            card.getAttribute('data-title'),
+            card.getAttribute('data-date'),
+            card.getAttribute('data-keywords')
+          ].join(' ');
+
+          const normalizedContent = normalizeText(searchableContent);
+
+          if (!query || normalizedContent.includes(query)) {
+            card.style.display = 'flex';
+            matchesCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        updateCounter(matchesCount);
+        noResults.style.display = matchesCount === 0 ? 'block' : 'none';
+      });
+
+      // 3. CONTROL DE MODO OSCURO CON LOCALSTORAGE
+      const savedTheme = localStorage.getItem('theme_ensa');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️ Modo Claro';
+      }
+
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        themeToggle.textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+        localStorage.setItem('theme_ensa', isDark ? 'dark' : 'light');
+      });
+
+      // 4. BOTÓN FLOTANTE "VOLVER ARRIBA"
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          scrollTopBtn.style.display = 'flex';
+        } else {
+          scrollTopBtn.style.display = 'none';
+        }
+      });
+
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
