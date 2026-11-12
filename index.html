@@ -395,6 +395,9 @@
       <button id="themeToggle" class="btn-action" type="button" aria-label="Cambiar tema">
         🌙 Modo Oscuro
       </button>
+      <button id="soundToggle" class="btn-action" type="button" aria-label="Activar o silenciar sonido">
+        🔊 Sonido: ON
+      </button>
     </div>
 
     <!-- ENCABEZADO -->
@@ -591,54 +594,84 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
 
-/* CODIGO DEL EFECTO DE SONIDO */
-// 6. SONIDO SUAVE AL PASAR EL CURSOR SOBRE LAS IMÁGENES DE CLASE/CURSO
+/* EFECTO DE SONIDO */
+
+      // 6. SONIDO SUAVE AL PASAR EL CURSOR CON DESBLOQUEO AUTOMÁTICO Y CONTROL
       let audioCtx = null;
+      let soundEnabled = localStorage.getItem('hover_sound') !== 'off';
+      const soundToggle = document.getElementById('soundToggle');
+
+      const updateSoundButton = () => {
+        if (soundToggle) {
+          soundToggle.textContent = soundEnabled ? '🔊 Sonido: ON' : '🔇 Sonido: OFF';
+        }
+      };
+      updateSoundButton();
+
+      const initAudio = () => {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      };
 
       const playHoverSound = () => {
+        if (!soundEnabled) return;
         try {
-          // Inicializa el contexto de audio la primera vez
-          if (!audioCtx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
-          }
-
-          // Reactiva el audio si el navegador lo tenía suspendido
-          if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-          }
+          initAudio();
+          if (audioCtx.state !== 'running') return;
 
           const oscillator = audioCtx.createOscillator();
           const gainNode = audioCtx.createGain();
 
-          // Onda sinusoidal pura (tono cálido y suave)
           oscillator.type = 'sine';
-          
-          // Deslizamiento de frecuencia sutil (efecto "gota" / interfaz moderna)
           const now = audioCtx.currentTime;
-          oscillator.frequency.setValueAtTime(520, now);
-          oscillator.frequency.exponentialRampToValueAtTime(680, now + 0.065);
 
-          // Control de volumen muy discreto (fade-in y fade-out rápido para evitar clics)
+          // Tono cristalino agradable (de 580 Hz a 780 Hz)
+          oscillator.frequency.setValueAtTime(580, now);
+          oscillator.frequency.exponentialRampToValueAtTime(780, now + 0.09);
+
+          // Volumen audible y suave (18% con desvanecimiento limpio)
           gainNode.gain.setValueAtTime(0.001, now);
-          gainNode.gain.linearRampToValueAtTime(0.035, now + 0.012); // Volumen máximo: 3.5%
-          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.085);
+          gainNode.gain.linearRampToValueAtTime(0.18, now + 0.015);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
 
           oscillator.connect(gainNode);
           gainNode.connect(audioCtx.destination);
 
           oscillator.start(now);
-          oscillator.stop(now + 0.09);
+          oscillator.stop(now + 0.15);
         } catch (e) {
-          // Ignora silenciosamente si el navegador bloquea el audio antes del primer clic
+          // Silencioso ante restricciones del navegador
         }
       };
 
-      // Asignar el evento a todas las miniaturas
+      // Desbloquear el motor de audio con la primera interacción en la página
+      ['click', 'keydown', 'touchstart'].forEach((evt) => {
+        document.addEventListener(evt, initAudio, { once: true });
+      });
+
+      // Botón superior para probar o silenciar
+      if (soundToggle) {
+        soundToggle.addEventListener('click', () => {
+          soundEnabled = !soundEnabled;
+          localStorage.setItem('hover_sound', soundEnabled ? 'on' : 'off');
+          updateSoundButton();
+          if (soundEnabled) {
+            playHoverSound(); // Reproduce una muestra al activarlo
+          }
+        });
+      }
+
+      // Asignar el sonido a todas las miniaturas de cursos/clases
       document.querySelectorAll('.thumbnail-container').forEach((thumb) => {
         thumb.addEventListener('mouseenter', playHoverSound);
       });
-/* FIN CODIGO DEL EFECTO DE SONIDO */
+
+/* FIN EFECTO DE SONIDO */
       
     });
   </script>
