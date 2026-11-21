@@ -230,6 +230,7 @@
       transition: var(--transition);
       border: 1px solid var(--border-color);
       position: relative;
+      content-visibility: auto;
     }
 
     .class-card:hover {
@@ -250,11 +251,11 @@
       letter-spacing: 0.5px;
       padding: 4px 10px;
       border-radius: 20px;
-      border: 1px solid rgba(2, 136, 209, 0.45); /* Borde sutil a tono con el degradado */
+      border: 1px solid rgba(2, 136, 209, 0.45);
       box-shadow: 
-        0 4px 12px rgba(11, 60, 93, 0.85),       /* Sombra base profunda del azul del botón */
-        0 0 16px rgba(2, 136, 209, 0.65),        /* Halo azul difuso exterior */
-        inset 0 1px 3px rgba(255, 255, 255, 0.35); /* Brillo superior para efecto de relieve */
+        0 4px 12px rgba(11, 60, 93, 0.85),
+        0 0 16px rgba(2, 136, 209, 0.65),
+        inset 0 1px 3px rgba(255, 255, 255, 0.35);
       z-index: 5;
       pointer-events: none;
     }
@@ -308,9 +309,9 @@
       justify-content: center;
       color: #fff;
       font-size: 1.4rem;
-      padding-left: 4px;       /* Mantiene la compensación óptica horizontal */
-      padding-bottom: 4px;     /* <-- Eleva el triángulo para centrarlo verticalmente */
-      line-height: 1;          /* Evita desalineación por altura de línea de fuente */
+      padding-left: 4px;
+      padding-bottom: 4px;
+      line-height: 1;
       border: 2px solid rgba(255, 255, 255, 0.95);
       box-shadow: 
         0 0 10px rgba(255, 255, 255, 0.9),
@@ -425,7 +426,7 @@
 
     <!-- CONTADOR DINÁMICO DE RESULTADOS -->
     <div id="searchCounter" class="search-counter">
-      Cargando clases...
+      Mostrando 4 de 4 clases
     </div>
 
     <!-- MENSAJE DE ESTADO: SIN RESULTADOS -->
@@ -517,11 +518,10 @@
   </footer>
 
   <!-- SCRIPTS -->
-<script>
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
       const searchInput = document.getElementById('courseSearch');
-      const cards = Array.from(document.querySelectorAll('.course-card'));
-      const columns = Array.from(document.querySelectorAll('.module-column'));
+      const cards = Array.from(document.querySelectorAll('.class-card'));
       const noResults = document.getElementById('noResults');
       const searchCounter = document.getElementById('searchCounter');
       const themeToggle = document.getElementById('themeToggle');
@@ -529,18 +529,30 @@
       const scrollTopBtn = document.getElementById('scrollTopBtn');
       const totalCards = cards.length;
 
-      // 1. ACTUALIZACIÓN DEL CONTADOR
+      // 1. ASIGNACIÓN AUTOMÁTICA DEL BADGE "ÚLTIMA CLASE" A LA PRIMERA TARJETA
+      if (cards.length > 0) {
+        const firstCard = cards[0];
+        const thumbnailBox = firstCard.querySelector('.thumbnail-container') || firstCard;
+        if (!thumbnailBox.querySelector('.badge-latest')) {
+          const badge = document.createElement('span');
+          badge.className = 'badge-latest';
+          badge.textContent = 'Última clase';
+          thumbnailBox.appendChild(badge);
+        }
+      }
+
+      // 2. ACTUALIZACIÓN DEL CONTADOR DE CLASES
       const updateCounter = (count) => {
         if (!searchCounter) return;
         if (searchInput && searchInput.value.trim()) {
-          searchCounter.textContent = `Mostrando ${count} de ${totalCards} cursos`;
+          searchCounter.textContent = `Mostrando ${count} de ${totalCards} clases`;
         } else {
-          searchCounter.textContent = `Mostrando ${totalCards} de ${totalCards} cursos`;
+          searchCounter.textContent = `Mostrando ${totalCards} de ${totalCards} clases`;
         }
       };
       updateCounter(totalCards);
 
-      // 2. FUNCIÓN DE BÚSQUEDA Y FILTRADO EN TIEMPO REAL
+      // 3. FUNCIÓN DE BÚSQUEDA Y FILTRADO EN TIEMPO REAL
       const normalizeText = (text) => {
         return (text || '')
           .toLowerCase()
@@ -555,7 +567,7 @@
 
           cards.forEach((card) => {
             const searchableContent = [
-              card.getAttribute('data-module'),
+              card.getAttribute('data-class'),
               card.getAttribute('data-title'),
               card.getAttribute('data-date'),
               card.getAttribute('data-keywords')
@@ -564,16 +576,11 @@
             const normalizedContent = normalizeText(searchableContent);
 
             if (!query || normalizedContent.includes(query)) {
-              card.style.display = 'block';
+              card.style.display = 'flex';
               matchesCount++;
             } else {
               card.style.display = 'none';
             }
-          });
-
-          columns.forEach((col) => {
-            const hasVisible = Array.from(col.querySelectorAll('.course-card')).some(c => c.style.display !== 'none');
-            col.style.display = (hasVisible || !query) ? 'flex' : 'none';
           });
 
           updateCounter(matchesCount);
@@ -583,8 +590,8 @@
         });
       }
 
-      // 3. CONTROL DE MODO OSCURO CON LOCALSTORAGE
-      const savedTheme = localStorage.getItem('theme_culminados');
+      // 4. CONTROL DE MODO OSCURO CON LOCALSTORAGE
+      const savedTheme = localStorage.getItem('theme_ensa');
       if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
         if (themeToggle) themeToggle.textContent = '☀️ Modo Claro';
@@ -595,11 +602,11 @@
           document.body.classList.toggle('dark-mode');
           const isDark = document.body.classList.contains('dark-mode');
           themeToggle.textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
-          localStorage.setItem('theme_culminados', isDark ? 'dark' : 'light');
+          localStorage.setItem('theme_ensa', isDark ? 'dark' : 'light');
         });
       }
 
-      // 4. BOTÓN FLOTANTE "VOLVER ARRIBA"
+      // 5. BOTÓN FLOTANTE "VOLVER ARRIBA"
       if (scrollTopBtn) {
         window.addEventListener('scroll', () => {
           scrollTopBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
@@ -610,7 +617,7 @@
         });
       }
 
-      // 5. PROTECCIÓN ANTI-COPIA DE IMÁGENES
+      // 6. PROTECCIÓN ANTI-COPIA DE IMÁGENES
       document.addEventListener('contextmenu', (e) => {
         if (e.target.nodeName === 'IMG') e.preventDefault();
       });
@@ -619,7 +626,7 @@
         if (e.target.nodeName === 'IMG') e.preventDefault();
       });
 
-      // 6. SONIDO SUAVE DE BRISA / VIENTO + CONTROL ON/OFF
+      // 7. SONIDO SUAVE DE BRISA / VIENTO + CONTROL ON/OFF
       let audioCtx = null;
       let windBuffer = null;
       let soundEnabled = localStorage.getItem('hover_sound') !== 'off';
