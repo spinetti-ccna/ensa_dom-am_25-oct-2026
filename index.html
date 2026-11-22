@@ -446,7 +446,7 @@
         data-keywords="simulador ping my network caja arena sandbox modulo 2 ospfv2 ospf area unica cisco packet tracer prioridad costo hello dead time troubleshooting redes multiacceso"
       >
         <a href="https://www.youtube.com/playlist?list=PLKIGPmnfzDxQ" target="_blank" rel="noopener noreferrer" class="thumbnail-container">
-          <img src="https://img.youtube.com/vi/YK59NeiJS_w/maxresdefault.jpg" alt="Clase 04 ENSA - 15/Nov/2026" loading="lazy">
+          <img src="https://img.youtube.com/vi/YK59NeiJS_w/maxresdefault.jpg" alt="Clase 05 ENSA - 22/Nov/2026" loading="lazy">
           <div class="play-overlay">
             <span class="play-btn-circle" aria-hidden="true">▶</span>
           </div>
@@ -568,7 +568,7 @@
       };
       updateCounter(totalCards);
 
-      // 3. FUNCIÓN DE BÚSQUEDA Y FILTRADO EN TIEMPO REAL
+// 3. FUNCIÓN DE BÚSQUEDA Y FILTRADO EN TIEMPO REAL (MULTI-PALABRA EN CUALQUIER ORDEN)
       const normalizeText = (text) => {
         return (text || '')
           .toLowerCase()
@@ -578,7 +578,9 @@
 
       if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-          const query = normalizeText(e.target.value.trim());
+          const rawQuery = normalizeText(e.target.value.trim());
+          // Divide la búsqueda en palabras individuales ignorando espacios múltiples
+          const searchTerms = rawQuery.split(/\s+/).filter(Boolean);
           let matchesCount = 0;
 
           cards.forEach((card) => {
@@ -591,7 +593,10 @@
 
             const normalizedContent = normalizeText(searchableContent);
 
-            if (!query || normalizedContent.includes(query)) {
+            // Verifica que TODAS las palabras buscadas existan en la tarjeta en cualquier orden
+            const isMatch = searchTerms.length === 0 || searchTerms.every((term) => normalizedContent.includes(term));
+
+            if (isMatch) {
               card.style.display = 'flex';
               matchesCount++;
             } else {
